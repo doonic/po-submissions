@@ -1,4 +1,4 @@
-PO_UILIB_DIR=../../po-uilib
+PO_UILIB_DIR=/home/cravid/videos/po-uilib-202109221024
 PO_GGC_CORE_DIR=../../ggc-core
 JARNAME=ggc-app
 

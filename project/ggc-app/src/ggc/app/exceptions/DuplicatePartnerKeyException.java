@@ -12,5 +12,5 @@ public class DuplicatePartnerKeyException extends CommandException {
   public DuplicatePartnerKeyException(String key) {
     super(Message.duplicatePartnerKey(key));
   }
-
+  
 }
