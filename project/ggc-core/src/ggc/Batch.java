@@ -3,7 +3,13 @@ package ggc;
 import java.io.Serializable;
 
 
-public class Batch implements Serializable{
+
+
+public class Batch implements /*Comparable<Batch>,*/ Serializable{
+
+    /** Serial number for serialization. */
+    private static final long serialVersionUID = 202110252046L;
+
 
     /**  Partner's identifier whose batch is bought from*/
     String _partner;
@@ -73,22 +79,24 @@ public class Batch implements Serializable{
     }
 
 
-
-    /** @see java.lang.Object#toString() */
+    /** 
     @Override
-    public String toString(){
-        return getProduct() + "|" + getPartner() + "|" 
-        + (int)Math.round(getPriceUnit())  + "|" + getStock();
+    public int compareTo(Batch other){
+         
+        int productCmp = getProduct().compareToIgnoreCase(
+            other.getProduct());
+        
+        int partnerCmp = getPartner().compareToIgnoreCase(
+          other.getPartner()  
+        );
+        if(productCmp != 0){
+            return productCmp;
+        }else if(productCmp == 0 && partnerCmp == 0){
+            return Double.compare(getPriceUnit(),other.getPriceUnit());
+        }
+        return productCmp;
     }
-
-    
-    
-
-
-
-
-    // THINK OF STUF TO IMPLEMENT
-
-
-
+    */
+ 
 }
+

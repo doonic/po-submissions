@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
+
 import ggc.exceptions.*;
 
 
@@ -277,15 +278,10 @@ public class Warehouse implements Serializable {
   *@return a collection with all products.
   */
   public Collection<Batch> batchesAll() {
-    return Collections.unmodifiableCollection(_batches);
-  }
 
-  /** 
-   * 
-   * 
-   * 
-   * 
-   */
+    return Collections.unmodifiableCollection(_batches);
+  
+  }
 
   /**
   *  // FIX ME ADD JAVA DOC
@@ -305,4 +301,7 @@ public class Warehouse implements Serializable {
   }
 /*------------------------------------------------------------------*/
 
+
+
+ 
 }

@@ -217,6 +217,31 @@ public void registerSimpleBatch(String idProduct, String idPartner
     return _warehouse.batchesAll();
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*------------------------------------------------------------------*/
 
 }

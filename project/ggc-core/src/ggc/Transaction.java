@@ -4,6 +4,10 @@ import java.io.Serializable;
 
 public abstract class Transaction implements Serializable{
 
+    // TO DO:
+    //  think of parameters
+    // --> final delivery
+
     /** Transaction Identifier */
     private int _id;
 
