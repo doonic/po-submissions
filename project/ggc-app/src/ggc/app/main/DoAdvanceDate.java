@@ -2,7 +2,6 @@ package ggc.app.main;
 
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
-
 import pt.tecnico.uilib.forms.*;
 
 import ggc.WarehouseManager;

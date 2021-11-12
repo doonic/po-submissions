@@ -1,126 +1,256 @@
 package ggc;
 
+import ggc.notifications.*;
+import ggc.status.*;
+
+import java.util.ArrayDeque;
 import java.util.ArrayList;
 import java.util.List;
-import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
 
+public class Partner implements Observer{
 
-public class Partner implements Serializable{
+    /** Serial number for serialization.  */ 
+    private static final long serialVersionUID = 202111100919L;
 
     /** Partner's Unique Identifier, key */
     private String _ident;
 
-    /** Partner's name */
+    /**  Partner's name */
     private String _name;
 
     /** Partner's Address */
     private String _address;
 
     /** Partner's current status */
-    private PartnerStatus _status = new PartnerStatusNormal();
+    private State _status;
 
     /** Partner's business points */
-    private int _pointsTracker = 0;
+    private double _pointsTracker;
 
-    /** Tracks partner's purchases */
-    private int _purchasesAmount = 0;
+    /** Total partner's purchases */
+    private int _acquisitions;
 
-    /** Tracks partner's sales*/
-    private int _salesAmount = 0;
+    /** Total partner's sales*/
+    private double _sales;
 
-    
-    /** Tracks partner's paid transactions */
-    private int _transactionPaid = 0;
+    /** partner's paid transactions */
+    private double _paidTransactions;
 
-    /** List of partner's purchases from the Warehouse */
-    private List<Purchases> __purchases = new ArrayList<Purchases>();
+    /** partner's chosen notification delivery path */
+    private DeliveryPath _deliveryPath;
 
-    // TO IMPLEMENT
+    /** List of warehouse's acquisitions associated to the partner */
+    private List<Transaction> _purchases;
 
+    /** List of Warehouse's sales to the partner and its asked product breakdown */
+    private List<Transaction> _salesBreakdown;
 
-    /** List of partner's Sales and Breakdown of products */
+    /** List of partner's notifications to be read */
+    private ArrayDeque<Notification> _notifications;
 
-
-    // TO IMPLEMENT 
-
-    // client constructors
-
-    public Partner(String ident, String name, String address) {
-        _ident = ident;
+     /**
+     * Partner's general constructor 
+     * @param partnerId
+     * @param name
+     * @param address
+     * @param deliveryPath
+     */
+    public Partner(String partnerId, String name, String address,
+    DeliveryPath deliveryPath){
+        _ident = partnerId;
         _name = name;
         _address = address;
+        _pointsTracker = 0;
+        _acquisitions = 0;
+        _sales = 0;
+        _paidTransactions = 0;
+        _deliveryPath = deliveryPath;
+        _status = new normalPartner(this);
+        _purchases = new ArrayList<Transaction>();
+        _salesBreakdown = new ArrayList<Transaction>();
+        _notifications = new ArrayDeque<Notification>();
+
     }
 
+    /**
+     * Partner's default constructor 
+     * @param partnerId
+     * @param name
+     * @param address
+     */
+    public Partner(String partnerId, String name, String address) {
+        /** Register the delivery on the Partner */
+        this(partnerId,name,address,new ClassicalNotificationDelivery( 
+        ));
+    }
 
+    /** Getters */
 
-
-
-    /** Getters and Setters*/
-
-    /** Returns partner's name */
+    /**
+     * 
+     * @return partner's name 
+     */
     public String getPartnerName(){
         return _name;
     }
 
-
-    /** Returns partner's unique identifier */
-    public String getId(){
+    /**
+     * 
+     * @return partner's unique identifier
+     */
+    public String getPartnerId(){
         return _ident;
     }
 
-    /** Returns partner's Address */
-    public String getAddress(){
+    /**
+     * 
+     * @return partner's Address 
+     */
+    public String getPartnerAddress(){
         return _address;
     }
 
-
-    /** Returns partner's points, the number of points is used to operate
-    offers and prizes over the partner */
-    public int getPartnerPoints(){
+    /**
+     * 
+     * @return points
+     *         used to operate discounts/prizes operate over the partner
+     */
+    public double getPartnerPoints(){
         return _pointsTracker;
     }
 
-    /** Returns partner's sales number */
-    public int getSalesPartner(){
-        return _salesAmount;
+    /**
+     * 
+     * @return partner's sales
+     */
+    public double getSalesPartner(){
+        return _sales;
     }
 
 
-    /** Returns partner's purchases number*/
-    public int getPurchasesPartner(){
-        return _purchasesAmount;
+    /**
+     * 
+     * @return partner's total purchases 
+     */
+    public double getPurchasesPartner(){
+        return _acquisitions;
     }
 
-    /** Returns parner's status */
-    public String getStatusName(){
+    /**
+     * 
+     * @return partner's status
+     */
+    public String getPartnerStatus(){
         return _status.toString();
     }
-    /** Updates partner's status */
-    public void changeStatus(PartnerStatus status){
-        _status = status;
+
+    /**
+     * 
+     * @param state
+     */
+    public void updateState(State state){
+        _status = state;
+    }
+
+    /**
+     * 
+     * set Partner to a higher status
+     */
+    public void Up(){
+        _status.statusUp();
+    }
+
+    /**
+     * 
+     * set Partner to an inferior status
+     */
+    public void Down(){
+        _status.statusDown();
+    }
+
+    /**
+     * 
+     * @return partner's total amount of
+     *         paid transactions
+     */
+    public double getPaidTransaction(){
+        return _paidTransactions;
+
+    }
+
+     /**
+     * Updates the observer to changes on the Observable
+     * (notification)
+     * 
+     * @param notification
+     */
+    public void update(String event,String productId,double price){
+        _notifications.add(
+        _deliveryPath.notificationDeliverySystem(
+            event,productId,price));
+ 
+    }
+
+    /**
+     * 
+     * @return and remove notification at the head of the queue (null 
+     *  if the deque is empty)
+     */
+    public Notification getNotification(){
+        return _notifications.poll();
     }
 
 
-    /** Returns partner's total amount of
-     * paid transactions */
-    public int getPaidTransaction(){
-        return _transactionPaid;
+    /**
+     * 
+     * @return a collection of all warehouse acquisitions transactions
+     *  associated to the Partner
+     */
+    public Collection<Transaction> getPartnerAcquisitionArchive(){
+        List<Transaction> archive = new ArrayList<Transaction>();
+        archive.addAll(archive);
+        return Collections.unmodifiableCollection(archive);
 
     }
 
+    /** Setters */
 
+    /**
+     * Adds the given transaction to the partner's achive
+     * 
+     * @param transaction 
+     */
+    public void addPartnerTransactionArchive(
+        Transaction transaction,int mode){
+            if(mode == 0){
+                _purchases.add(transaction);
+            }else{
+                _salesBreakdown.add(transaction);
+            }
+    }
+
+    
+    /**
+     * 
+     * @param points ,to be added to the partner's points tracker
+     *         
+     */
+    public void setPartnerPoints(double points){
+        _pointsTracker = points;
+    }
+    
     /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
-        return getId() + "|" + getPartnerName() + "|" 
-         + getAddress() + "|" + getStatusName() + "|"
-         + getPartnerPoints() + "|"
-        + getPurchasesPartner() + "|" + getSalesPartner()
-         + "|" +  getPaidTransaction();
+        return getPartnerId() + "|" + getPartnerName() + "|" 
+         + getPartnerAddress() + "|" +  getPartnerStatus() + "|"
+         + (int)Math.round(getPartnerPoints()) + "|"
+        + (int)Math.round(getPurchasesPartner()) + "|" + 
+        (int)Math.round(
+            getSalesPartner())
+         + "|" +  (int)Math.round(getPaidTransaction());
  
     }
 }
-
-
-// TO IMPLEMENT
-/** List of partner's Sales and Breakdown of products */

@@ -2,6 +2,7 @@ package ggc.app.partners;
 
 import pt.tecnico.uilib.menus.Command;
 import pt.tecnico.uilib.menus.CommandException;
+import ggc.app.exceptions.UnknownPartnerKeyException;
 import ggc.WarehouseManager;
 //FIXME import classes
 
@@ -14,14 +15,17 @@ class DoShowPartner extends Command<WarehouseManager> {
     super(Label.SHOW_PARTNER, receiver);
     addStringField("PartnerKey",Prompt.partnerKey());
 
-    //FIXME add command fields
   }
 
   @Override
-  public void execute() throws CommandException {
-
-    String testInput = stringField("PartnerKey");
-    _display.popup(_receiver.getPartner(testInput));
+  public void execute() throws CommandException{
+    
+    String key = stringField("PartnerKey");
+      if(!_receiver.checkPartnerRegistryStatus(key)){
+        throw new UnknownPartnerKeyException(key);
+      }else{
+         _display.popup(_receiver.getPartner(key));
+      }
   }
 
 }

@@ -1,32 +1,24 @@
 package ggc;
 
 import java.io.Serializable;
+import java.util.Comparator;
 
-
-
-
-public class Batch implements /*Comparable<Batch>,*/ Serializable{
+public class Batch implements Serializable{
 
     /** Serial number for serialization. */
-    private static final long serialVersionUID = 202110252046L;
-
+    private static final long serialVersionUID = 202111052008L;
 
     /**  Partner's identifier whose batch is bought from*/
     String _partner;
 
-
     /** Number of available units of a product */
     int _stock;
 
-
     /** Price per unit of a product */
-    double _priceUnit;
-
+    double _priceU;
 
     /** Product's associated with the batch */
     String _product;
-
-
     
     /**
     *Batch main Constructor
@@ -40,63 +32,94 @@ public class Batch implements /*Comparable<Batch>,*/ Serializable{
     public Batch(String partner,int stock,double price,String product){
         _partner = partner;
         _stock = stock;
-        _priceUnit = price;
+        _priceU = price;
         _product = product;
     }
 
-
-    /** Returns the partner associated with a given batch */
-    public String getPartner(){
+    /**
+     * 
+     * @return partner's id, partner whose batch was bought 
+     */
+    public String getPartnerId(){
         return _partner;
     }
-
     
-    /** Returns the number of available units */
+    /**
+     * 
+     * @return stock, total number of product's unit
+     */
     public int getStock(){
         return _stock;
     }
 
-
-    /** Returns the price per unit  */
-    public double getPriceUnit(){
-        return _priceUnit;
+    /**
+     * 
+     * @return price of each unit Prouct(Batch)
+     */
+    public double getpriceU(){
+        return _priceU;
     }
 
-
-    /** Returns the product in a given batch */
-    public String getProduct(){
+    /**
+     * 
+     * @return product's id 
+     */
+    public String getProductId(){
         return _product;
     }
 
-
-    public void setPriceUnit(double value){
-        _priceUnit = value;
+    /**
+     * 
+     * @param value
+     */
+    public void setpriceU(double value){
+        _priceU = value;
     }
 
-
+    /**
+     * 
+     * @param amount being added
+     */
     public void updateStock(int amount){
         _stock += amount;
     }
 
-
-    /** 
-    @Override
-    public int compareTo(Batch other){
-         
-        int productCmp = getProduct().compareToIgnoreCase(
-            other.getProduct());
-        
-        int partnerCmp = getPartner().compareToIgnoreCase(
-          other.getPartner()  
-        );
-        if(productCmp != 0){
-            return productCmp;
-        }else if(productCmp == 0 && partnerCmp == 0){
-            return Double.compare(getPriceUnit(),other.getPriceUnit());
-        }
-        return productCmp;
+    /**
+     * 
+     * @param amount being removed
+     */
+    public void removeStock(int amount){
+        _stock -= amount;
     }
-    */
- 
+    
+    /** @see java.lang.Object#toString() */
+    @Override
+    public String toString(){
+        return getProductId() + "|" + getPartnerId() + "|" 
+        + (int)Math.round(getpriceU())  + "|" + getStock();
+    }
+    
+    /**
+     * Batches default Comparator
+     */
+    public static Comparator<Batch> partnerAllComparator = 
+    new Comparator<Batch>() {
+        public int compare(Batch a, Batch b){
+            int partnerCmp = a.getPartnerId().compareToIgnoreCase
+            (b.getPartnerId());
+            int priceCmp = Double.compare(a.getpriceU(),
+            b.getpriceU());
+            int stockCmp = Integer.compare(a.getStock(), b.getStock());
+            if((partnerCmp == 0) & (priceCmp == 0) ){
+                return stockCmp;
+            }else if((partnerCmp == 0)){
+                return priceCmp;
+            }
+            if(partnerCmp == 0){
+                return priceCmp;
+            }
+            return partnerCmp;
+        }        
+    };
+    
 }
-

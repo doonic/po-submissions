@@ -15,7 +15,9 @@ class DoShowGlobalBalance extends Command<WarehouseManager> {
 
   @Override
   public final void execute() throws CommandException {
-    //FIXME implement command
+
+    _display.popup(Message.currentBalance(
+      _receiver.showAvailableBalance(),_receiver.showBookBalance()));
   }
   
 }

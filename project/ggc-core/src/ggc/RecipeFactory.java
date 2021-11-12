@@ -53,8 +53,6 @@ public class RecipeFactory implements Serializable{
         _factor = factor;
     }
 
-
-
     /**
     * parses and initializes the Treemap of recipes
     *
@@ -77,29 +75,29 @@ public class RecipeFactory implements Serializable{
         }
     }
 
-    /** Returns the multiplicative factor to compute the derived
-     * product price
+    /**
+     * 
+     * @return multiplicative factor to compute the derived
+     *         product price
      */
-
     public double getFactor(){
         return _factor;
     }
 
-
-    public String getReceiptGiven(){
+    /**
+     * 
+     * @return derived product recipe as given when registered
+     */
+    public String getRecipe(){
         return _componentsAndAmountGiven;
     }
 
     /** @see java.lang.Object#toString() */
     @Override
     public String toString() {
-        return getFactor() + "|" + getReceiptGiven();
+        return getFactor() + "|" + getRecipe();
             
     }
-
-
-
-
 
 }
     

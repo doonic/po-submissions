@@ -6,8 +6,7 @@ import ggc.WarehouseManager;
 
 //FIXME import classes
 
-import ggc.exceptions.DuplicatePartnerKeyExceptionMain;
-import ggc.app.exceptions.*;
+import ggc.app.exceptions.DuplicatePartnerKeyException;
 
 /**
  * Register new partner.
@@ -23,11 +22,14 @@ class DoRegisterPartner extends Command<WarehouseManager> {
 
   @Override
   public void execute() throws CommandException{
-    try {
-      _receiver.registerPartner(stringField("PartnerId")
-      ,stringField("PartnerName"),stringField("PartnerAddress"));
-    } catch ( DuplicatePartnerKeyExceptionMain e){
-      throw new DuplicatePartnerKeyException(e.getPartnerKey());
+
+    String key  = stringField("PartnerId");
+    if(_receiver.checkPartnerRegistryStatus(key)){
+      throw new DuplicatePartnerKeyException(key);
+    }else{
+        _receiver.registerPartner(key,stringField("PartnerName"),
+        stringField("PartnerAddress"));
+
     }
   }
 
